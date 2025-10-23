@@ -725,6 +725,9 @@
             url.searchParams.set('file', path);
             window.history.pushState({}, '', url);
             
+            // Show content header for file content
+            document.querySelector('.content-header').style.display = 'block';
+            
             // Update header
             document.getElementById('contentTitle').textContent = title;
             document.getElementById('contentMeta').textContent = `📁 ${path}`;
@@ -769,8 +772,8 @@
         
         // Show welcome message
         function showWelcome() {
-            document.getElementById('contentTitle').textContent = '';
-            document.getElementById('contentMeta').textContent = '';
+            // Hide content header for homepage
+            document.querySelector('.content-header').style.display = 'none';
             
             document.getElementById('contentArea').innerHTML = `
                 <div class="markdown-content">
