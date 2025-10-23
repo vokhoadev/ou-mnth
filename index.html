@@ -388,12 +388,12 @@
         // File structure data
         const fileStructure = {
             "📖 Trang chủ": [
-                { name: "README.md", path: "README.md", title: "Trang chủ - OU-MNTH" },
-                { name: "C02/README.md", path: "C02/README.md", title: "Menu chi tiết - Chương 2" },
-                { name: "INDEX Tra cứu nhanh", path: "C02/INDEX_TraCuuNhanh.md", title: "Tra cứu nhanh - Công thức và bảng tra cứu" }
+                { name: "README.md", path: "README.md", title: "Trang chủ - OU-MNTH", url: "?file=README.md" },
+                { name: "C02/README.md", path: "C02/README.md", title: "Menu chi tiết - Chương 2", url: "?file=C02/README.md" },
+                { name: "INDEX Tra cứu nhanh", path: "C02/INDEX_TraCuuNhanh.md", title: "Tra cứu nhanh - Công thức và bảng tra cứu", url: "?file=C02/INDEX_TraCuuNhanh.md" }
             ],
             "📦 Tổng quan": [
-                { name: "Nén dữ liệu", path: "C02/0.1.1_NenDuLieu_DataCompression.md", title: "Nén dữ liệu (Data Compression)" }
+                { name: "Nén dữ liệu", path: "C02/0.1.1_NenDuLieu_DataCompression.md", title: "Nén dữ liệu (Data Compression)", url: "?file=C02/0.1.1_NenDuLieu_DataCompression.md" }
             ],
             "🔢 Chuyển đổi hệ số đếm": [
                 { name: "Thập phân → Nhị phân", path: "C02/1.1.1_ThapPhan_Sang_NhiPhan.md", title: "Chuyển từ thập phân sang nhị phân" },
@@ -496,6 +496,7 @@
         
         // Initialize the application
         function init() {
+            generateUrlsForAllFiles();
             buildNavigation();
             setupSearch();
             setupMarked();
@@ -538,6 +539,17 @@
                 }
             }
             return null;
+        }
+        
+        // Generate URL for all files
+        function generateUrlsForAllFiles() {
+            for (const [sectionTitle, files] of Object.entries(fileStructure)) {
+                files.forEach(file => {
+                    if (!file.url) {
+                        file.url = `?file=${file.path}`;
+                    }
+                });
+            }
         }
         
         // Build navigation menu
