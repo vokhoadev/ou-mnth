@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 OU-MNTH - Markdown Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 350px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 5px 0 25px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+        }
+        
+        .sidebar-header {
+            padding: 30px 25px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        
+        .sidebar-header h1 {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .sidebar-header p {
+            opacity: 0.9;
+            font-size: 0.9em;
+        }
+        
+        .search-box {
+            padding: 20px 25px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .nav-menu {
+            padding: 20px 0;
+        }
+        
+        .nav-section {
+            margin-bottom: 30px;
+        }
+        
+        .nav-section-title {
+            padding: 10px 25px;
+            font-weight: 600;
+            color: #667eea;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid #667eea;
+        }
+        
+        .nav-item {
+            display: block;
+            padding: 12px 25px;
+            color: #2c3e50;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            font-size: 0.9em;
+        }
+        
+        .nav-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-left-color: #667eea;
+            color: #667eea;
+        }
+        
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-left-color: #f093fb;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 350px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            min-height: 100vh;
+        }
+        
+        .content-header {
+            padding: 30px 40px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+        
+        .content-title {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+        
+        .content-meta {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+        
+        .content-body {
+            padding: 40px;
+            line-height: 1.8;
+            max-width: 1000px;
+        }
+        
+        /* Markdown Styling */
+        .markdown-content h1 {
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .markdown-content h2 {
+            font-size: 1.8em;
+            color: #34495e;
+            margin: 25px 0 15px 0;
+            padding-left: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .markdown-content h3 {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin: 20px 0 10px 0;
+        }
+        
+        .markdown-content h4 {
+            font-size: 1.2em;
+            color: #34495e;
+            margin: 15px 0 8px 0;
+        }
+        
+        .markdown-content p {
+            margin: 15px 0;
+            color: #2c3e50;
+        }
+        
+        .markdown-content ul, .markdown-content ol {
+            margin: 15px 0;
+            padding-left: 30px;
+        }
+        
+        .markdown-content li {
+            margin: 8px 0;
+            color: #2c3e50;
+        }
+        
+        .markdown-content blockquote {
+            border-left: 4px solid #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .markdown-content code {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9em;
+            color: #e74c3c;
+        }
+        
+        .markdown-content pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .markdown-content pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+        
+        .markdown-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .markdown-content th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .markdown-content td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .markdown-content tr:nth-child(even) {
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .markdown-content a {
+            color: #667eea;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .markdown-content a:hover {
+            border-bottom-color: #667eea;
+            color: #764ba2;
+        }
+        
+        /* Loading and Error States */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #7f8c8d;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 60px;
+            color: #e74c3c;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .content-body {
+                padding: 20px;
+            }
+            
+            .content-title {
+                font-size: 2em;
+            }
+        }
+        
+        /* Toggle Button */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1001;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+    
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1>📚 OU-MNTH</h1>
+                <p>Markdown Viewer</p>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="🔍 Tìm kiếm bài tập..." id="searchInput">
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <!-- Navigation will be populated by JavaScript -->
+            </div>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1 class="content-title" id="contentTitle">Chọn một bài tập để xem</h1>
+                <p class="content-meta" id="contentMeta">Sử dụng menu bên trái để điều hướng</p>
+            </div>
+            
+            <div class="content-body">
+                <div id="contentArea">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Đang tải nội dung...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // File structure data
+        const fileStructure = {
+            "📖 Trang chủ": [
+                { name: "README.md", path: "README.md", title: "Trang chủ - OU-MNTH" },
+                { name: "INDEX Tra cứu nhanh", path: "C02/INDEX_TraCuuNhanh.md", title: "Tra cứu nhanh - Công thức và bảng tra cứu" }
+            ],
+            "📦 Tổng quan": [
+                { name: "Nén dữ liệu", path: "C02/0.1.1_NenDuLieu_DataCompression.md", title: "Nén dữ liệu (Data Compression)" }
+            ],
+            "🔢 Chuyển đổi hệ số đếm": [
+                { name: "Thập phân → Nhị phân", path: "C02/1.1.1_ThapPhan_Sang_NhiPhan.md", title: "Chuyển từ thập phân sang nhị phân" },
+                { name: "Thập phân → Bát phân", path: "C02/1.1.2_ThapPhan_Sang_BatPhan.md", title: "Chuyển từ thập phân sang bát phân" },
+                { name: "Thập phân → Thập lục phân", path: "C02/1.1.3_ThapPhan_Sang_ThapLucPhan.md", title: "Chuyển từ thập phân sang thập lục phân" },
+                { name: "Thập phân → Hệ cơ số K", path: "C02/1.1.4_ThapPhan_Sang_HeCoSoK.md", title: "Chuyển từ thập phân sang hệ cơ số K" },
+                { name: "Nhị phân → Thập phân", path: "C02/1.2.1_NhiPhan_Sang_ThapPhan.md", title: "Chuyển từ nhị phân sang thập phân" },
+                { name: "Bát phân → Thập phân", path: "C02/1.2.2_BatPhan_Sang_ThapPhan.md", title: "Chuyển từ bát phân sang thập phân" },
+                { name: "Thập lục phân → Thập phân", path: "C02/1.2.3_ThapLucPhan_Sang_ThapPhan.md", title: "Chuyển từ thập lục phân sang thập phân" },
+                { name: "Hệ cơ số K → Thập phân", path: "C02/1.2.4_HeCoSoK_Sang_ThapPhan.md", title: "Chuyển từ hệ cơ số K sang thập phân" },
+                { name: "Nhị phân ↔ Bát phân", path: "C02/1.3.1_NhiPhan_BatPhan_ChuyenDoi.md", title: "Chuyển đổi trực tiếp nhị phân và bát phân" },
+                { name: "Nhị phân ↔ Thập lục phân", path: "C02/1.3.2_NhiPhan_ThapLucPhan_ChuyenDoi.md", title: "Chuyển đổi trực tiếp nhị phân và thập lục phân" },
+                { name: "Bát phân ↔ Thập lục phân", path: "C02/1.3.3_BatPhan_ThapLucPhan_ChuyenDoi.md", title: "Chuyển đổi trực tiếp bát phân và thập lục phân" },
+                { name: "Thập phân có lẻ → Nhị phân", path: "C02/1.4.1_ThapPhan_CoLe_Sang_NhiPhan.md", title: "Chuyển đổi số thập phân có phần lẻ sang nhị phân" },
+                { name: "Thập phân có lẻ → Bát phân", path: "C02/1.4.2_ThapPhan_CoLe_Sang_BatPhan.md", title: "Chuyển đổi số thập phân có phần lẻ sang bát phân" },
+                { name: "Thập phân có lẻ → Thập lục phân", path: "C02/1.4.3_ThapPhan_CoLe_Sang_ThapLucPhan.md", title: "Chuyển đổi số thập phân có phần lẻ sang thập lục phân" }
+            ],
+            "➕ Phép toán số học": [
+                { name: "Phép cộng nhị phân", path: "C02/2.1.1_PhepCong_NhiPhan.md", title: "Phép cộng nhị phân cơ bản" },
+                { name: "Phép trừ nhị phân", path: "C02/2.1.2_PhepTru_NhiPhan.md", title: "Phép trừ nhị phân" },
+                { name: "Phép nhân nhị phân", path: "C02/2.1.3_PhepNhan_NhiPhan.md", title: "Phép nhân nhị phân" },
+                { name: "Phép chia nhị phân", path: "C02/2.1.4_PhepChia_NhiPhan.md", title: "Phép chia nhị phân" },
+                { name: "Phép trừ bát phân", path: "C02/2.1.5_PhepTru_BatPhan.md", title: "Phép trừ bát phân" },
+                { name: "Phép nhân bát phân", path: "C02/2.1.6_PhepNhan_BatPhan.md", title: "Phép nhân bát phân" },
+                { name: "Phép chia bát phân", path: "C02/2.1.7_PhepChia_BatPhan.md", title: "Phép chia bát phân" },
+                { name: "Phép cộng thập lục phân", path: "C02/2.2.1_PhepCong_BatPhan.md", title: "Phép cộng thập lục phân" },
+                { name: "Phép trừ thập lục phân", path: "C02/2.2.2_PhepTru_ThapLucPhan.md", title: "Phép trừ thập lục phân" },
+                { name: "Phép nhân thập lục phân", path: "C02/2.2.3_PhepNhan_ThapLucPhan.md", title: "Phép nhân thập lục phân" },
+                { name: "Phép chia thập lục phân", path: "C02/2.2.4_PhepChia_ThapLucPhan.md", title: "Phép chia thập lục phân" },
+                { name: "Phép cộng hệ cơ số K", path: "C02/2.3.1_PhepCong_HeCoSoK.md", title: "Phép cộng hệ cơ số K" },
+                { name: "Phép trừ hệ cơ số K", path: "C02/2.3.2_PhepTru_HeCoSoK.md", title: "Phép trừ hệ cơ số K" },
+                { name: "Phép nhân hệ cơ số K", path: "C02/2.3.3_PhepNhan_HeCoSoK.md", title: "Phép nhân hệ cơ số K" },
+                { name: "Phép chia hệ cơ số K", path: "C02/2.3.4_PhepChia_HeCoSoK.md", title: "Phép chia hệ cơ số K" }
+            ],
+            "🔢 Số nguyên không dấu": [
+                { name: "Biểu diễn số nguyên không dấu", path: "C02/3.1.1_BieuDien_SoNguyen_KhongDau.md", title: "Biểu diễn số nguyên không dấu" },
+                { name: "Phép cộng số nguyên không dấu", path: "C02/3.1.2_PhepCong_SoNguyen_KhongDau.md", title: "Phép cộng số nguyên không dấu" },
+                { name: "Phép trừ số nguyên không dấu", path: "C02/3.1.3_PhepTru_SoNguyen_KhongDau.md", title: "Phép trừ số nguyên không dấu" },
+                { name: "Phép nhân số nguyên không dấu", path: "C02/3.1.4_PhepNhan_SoNguyen_KhongDau.md", title: "Phép nhân số nguyên không dấu" },
+                { name: "Phép chia số nguyên không dấu", path: "C02/3.1.5_PhepChia_SoNguyen_KhongDau.md", title: "Phép chia số nguyên không dấu" },
+                { name: "So sánh số nguyên không dấu", path: "C02/3.1.6_SoSanh_SoNguyen_KhongDau.md", title: "So sánh số nguyên không dấu" },
+                { name: "Chuyển đổi số nguyên không dấu", path: "C02/3.1.7_ChuyenDoi_SoNguyen_KhongDau.md", title: "Chuyển đổi số nguyên không dấu" },
+                { name: "Phạm vi số nguyên không dấu", path: "C02/3.1.8_PhamVi_SoNguyen_KhongDau.md", title: "Phạm vi số nguyên không dấu" },
+                { name: "Ứng dụng số nguyên không dấu", path: "C02/3.1.9_UngDung_SoNguyen_KhongDau.md", title: "Ứng dụng số nguyên không dấu" }
+            ],
+            "➖ Số nguyên có dấu": [
+                { name: "Biểu diễn số nguyên có dấu", path: "C02/4.1.1_BieuDien_SoNguyen_CoDau.md", title: "Biểu diễn số nguyên có dấu" },
+                { name: "Phép cộng số nguyên có dấu", path: "C02/4.1.2_PhepCong_SoNguyen_CoDau.md", title: "Phép cộng số nguyên có dấu" },
+                { name: "Phép trừ số nguyên có dấu", path: "C02/4.1.3_PhepTru_SoNguyen_CoDau.md", title: "Phép trừ số nguyên có dấu" },
+                { name: "Phép nhân số nguyên có dấu", path: "C02/4.1.4_PhepNhan_SoNguyen_CoDau.md", title: "Phép nhân số nguyên có dấu" },
+                { name: "Phép chia số nguyên có dấu", path: "C02/4.1.5_PhepChia_SoNguyen_CoDau.md", title: "Phép chia số nguyên có dấu" },
+                { name: "So sánh số nguyên có dấu", path: "C02/4.1.6_SoSanh_SoNguyen_CoDau.md", title: "So sánh số nguyên có dấu" },
+                { name: "Chuyển đổi số nguyên có dấu", path: "C02/4.1.7_ChuyenDoi_SoNguyen_CoDau.md", title: "Chuyển đổi số nguyên có dấu" },
+                { name: "Phạm vi số nguyên có dấu", path: "C02/4.1.8_PhamVi_SoNguyen_CoDau.md", title: "Phạm vi số nguyên có dấu" },
+                { name: "Ứng dụng số nguyên có dấu", path: "C02/4.1.9_UngDung_SoNguyen_CoDau.md", title: "Ứng dụng số nguyên có dấu" },
+                { name: "Biểu diễn số nguyên có dấu - Bù 1", path: "C02/4.2.1_BieuDien_SoNguyen_CoDau_Bu1.md", title: "Biểu diễn số nguyên có dấu - Bù 1" },
+                { name: "Biểu diễn số nguyên có dấu - Bù 2", path: "C02/4.2.2_BieuDien_SoNguyen_CoDau_Bu2.md", title: "Biểu diễn số nguyên có dấu - Bù 2" },
+                { name: "Biểu diễn số nguyên có dấu - Mã quá N", path: "C02/4.2.3_BieuDien_SoNguyen_CoDau_MaQuaN.md", title: "Biểu diễn số nguyên có dấu - Mã quá N" },
+                { name: "Phép cộng số nguyên có dấu - Bù 1", path: "C02/4.2.4_PhepCong_SoNguyen_CoDau_Bu1.md", title: "Phép cộng số nguyên có dấu - Bù 1" },
+                { name: "Phép cộng số nguyên có dấu - Bù 2", path: "C02/4.2.5_PhepCong_SoNguyen_CoDau_Bu2.md", title: "Phép cộng số nguyên có dấu - Bù 2" },
+                { name: "Phép cộng số nguyên có dấu - Mã quá N", path: "C02/4.2.6_PhepCong_SoNguyen_CoDau_MaQuaN.md", title: "Phép cộng số nguyên có dấu - Mã quá N" },
+                { name: "Phép trừ số nguyên có dấu - Bù 1", path: "C02/4.2.7_PhepTru_SoNguyen_CoDau_Bu1.md", title: "Phép trừ số nguyên có dấu - Bù 1" },
+                { name: "Phép trừ số nguyên có dấu - Bù 2", path: "C02/4.2.8_PhepTru_SoNguyen_CoDau_Bu2.md", title: "Phép trừ số nguyên có dấu - Bù 2" },
+                { name: "Phép trừ số nguyên có dấu - Mã quá N", path: "C02/4.2.9_PhepTru_SoNguyen_CoDau_MaQuaN.md", title: "Phép trừ số nguyên có dấu - Mã quá N" },
+                { name: "Tìm mã bù 2", path: "C02/4.3.1_TimMaBu2.md", title: "Tìm mã bù 2 của số âm" }
+            ],
+            "🔧 Thao tác bit": [
+                { name: "Phép toán bit AND", path: "C02/5.1.1_PhepToan_Bit_AND.md", title: "Phép toán bit AND (&)" },
+                { name: "Phép toán bit OR", path: "C02/5.1.2_PhepToan_Bit_OR.md", title: "Phép toán bit OR (|)" },
+                { name: "Phép toán bit XOR", path: "C02/5.1.3_PhepToan_Bit_XOR.md", title: "Phép toán bit XOR (^)" },
+                { name: "Phép toán bit NOT", path: "C02/5.1.4_PhepToan_Bit_NOT.md", title: "Phép toán bit NOT (~)" },
+                { name: "Dịch bit Left Shift", path: "C02/5.2.1_DichBit_LeftShift.md", title: "Dịch bit Left Shift (<<)" },
+                { name: "Dịch bit Right Shift", path: "C02/5.2.2_DichBit_RightShift.md", title: "Dịch bit Right Shift (>>)" }
+            ],
+            "🔢 Số thực": [
+                { name: "Số dấu chấm tĩnh", path: "C02/6.1.1_SoDauChamTinh_FixedPoint.md", title: "Số dấu chấm tĩnh (Fixed Point)" },
+                { name: "Số dấu chấm động", path: "C02/6.2.1_SoDauChamDong_FloatingPoint.md", title: "Số dấu chấm động (Floating Point)" },
+                { name: "IEEE 754 Single Precision", path: "C02/6.3.1_IEEE754_Single_Precision.md", title: "IEEE 754 Single Precision (32-bit)" },
+                { name: "IEEE 754 Double Precision", path: "C02/6.3.2_IEEE754_DoublePrecision.md", title: "IEEE 754 Double Precision (64-bit)" }
+            ],
+            "📝 Mã hóa ký tự": [
+                { name: "Mã hóa ASCII", path: "C02/7.1.1_MaHoa_ASCII.md", title: "Mã hóa ký tự theo bảng mã ASCII" },
+                { name: "Unicode và UTF", path: "C02/7.2.1_Unicode_UTF.md", title: "Unicode và UTF-8, UTF-16" }
+            ],
+            "🎵 Dữ liệu âm thanh": [
+                { name: "Nguyên lý số hóa âm thanh", path: "C02/8.1.1_NguyenLySoHoaAmThanh.md", title: "Nguyên lý số hóa âm thanh" },
+                { name: "Định dạng file âm thanh", path: "C02/8.2.1_DinhDangFileAmThanh.md", title: "Định dạng file âm thanh" }
+            ],
+            "🖼️ Dữ liệu hình ảnh": [
+                { name: "Biểu diễn màu sắc RGB", path: "C02/9.1.1_BieuDienMauSac_RGB.md", title: "Biểu diễn màu sắc (RGB)" },
+                { name: "Định dạng hình ảnh Raster", path: "C02/9.2.1_DinhDangHinhAnh_Raster.md", title: "Định dạng hình ảnh Raster" },
+                { name: "Vector Graphics và Video", path: "C02/9.3.1_VectorGraphics_Video.md", title: "Vector Graphics và Video" }
+            ],
+            "🎯 Bài tập tổng hợp": [
+                { name: "Bài tập tổng hợp", path: "C02/10.1.1_BaiTapTongHop.md", title: "Bài tập tổng hợp và ứng dụng" }
+            ]
+        };
+        
+        let currentFile = null;
+        
+        // Initialize the application
+        function init() {
+            buildNavigation();
+            setupSearch();
+            setupMarked();
+            
+            // Load default content
+            showWelcome();
+        }
+        
+        // Build navigation menu
+        function buildNavigation() {
+            const navMenu = document.getElementById('navMenu');
+            let html = '';
+            
+            for (const [sectionTitle, files] of Object.entries(fileStructure)) {
+                html += `<div class="nav-section">
+                    <div class="nav-section-title">${sectionTitle}</div>`;
+                
+                files.forEach(file => {
+                    html += `<a href="#" class="nav-item" data-path="${file.path}" data-title="${file.title}">
+                        ${file.name}
+                    </a>`;
+                });
+                
+                html += '</div>';
+            }
+            
+            navMenu.innerHTML = html;
+            
+            // Add click handlers
+            navMenu.addEventListener('click', function(e) {
+                if (e.target.classList.contains('nav-item')) {
+                    e.preventDefault();
+                    const path = e.target.dataset.path;
+                    const title = e.target.dataset.title;
+                    loadMarkdownFile(path, title);
+                    
+                    // Update active state
+                    document.querySelectorAll('.nav-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    e.target.classList.add('active');
+                }
+            });
+        }
+        
+        // Setup search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                const navItems = document.querySelectorAll('.nav-item');
+                
+                navItems.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    const section = item.closest('.nav-section');
+                    
+                    if (text.includes(query)) {
+                        item.style.display = 'block';
+                        section.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Hide empty sections
+                document.querySelectorAll('.nav-section').forEach(section => {
+                    const visibleItems = section.querySelectorAll('.nav-item[style*="block"], .nav-item:not([style*="none"])');
+                    if (visibleItems.length === 0) {
+                        section.style.display = 'none';
+                    } else {
+                        section.style.display = 'block';
+                    }
+                });
+            });
+        }
+        
+        // Setup marked.js configuration
+        function setupMarked() {
+            marked.setOptions({
+                highlight: function(code, lang) {
+                    if (lang && hljs.getLanguage(lang)) {
+                        return hljs.highlight(code, { language: lang }).value;
+                    }
+                    return hljs.highlightAuto(code).value;
+                },
+                breaks: true,
+                gfm: true
+            });
+        }
+        
+        // Load and display markdown file
+        async function loadMarkdownFile(path, title) {
+            currentFile = { path, title };
+            
+            // Update header
+            document.getElementById('contentTitle').textContent = title;
+            document.getElementById('contentMeta').textContent = `📁 ${path}`;
+            
+            // Show loading
+            document.getElementById('contentArea').innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Đang tải nội dung...</p>
+                </div>
+            `;
+            
+            try {
+                const response = await fetch(path);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const markdown = await response.text();
+                const html = marked.parse(markdown);
+                
+                document.getElementById('contentArea').innerHTML = `
+                    <div class="markdown-content">${html}</div>
+                `;
+                
+                // Highlight code blocks
+                hljs.highlightAll();
+                
+            } catch (error) {
+                document.getElementById('contentArea').innerHTML = `
+                    <div class="error">
+                        <h3>❌ Lỗi tải file</h3>
+                        <p>Không thể tải file: <code>${path}</code></p>
+                        <p>Lỗi: ${error.message}</p>
+                        <button onclick="loadMarkdownFile('${path}', '${title}')" style="margin-top: 20px; padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            🔄 Thử lại
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        
+        // Show welcome message
+        function showWelcome() {
+            document.getElementById('contentTitle').textContent = '📚 OU-MNTH - Markdown Viewer';
+            document.getElementById('contentMeta').textContent = 'Chọn một bài tập từ menu bên trái để bắt đầu';
+            
+            document.getElementById('contentArea').innerHTML = `
+                <div class="markdown-content">
+                    <h1>🎓 Chào mừng đến với OU-MNTH!</h1>
+                    <p>Đây là trình xem Markdown chuyên nghiệp cho tài liệu học tập <strong>Nhập Môn Tin Học</strong>.</p>
+                    
+                    <h2>✨ Tính năng:</h2>
+                    <ul>
+                        <li>📖 <strong>Xem Markdown đẹp mắt</strong> với syntax highlighting</li>
+                        <li>🔍 <strong>Tìm kiếm nhanh</strong> trong tất cả bài tập</li>
+                        <li>📱 <strong>Responsive design</strong> cho mọi thiết bị</li>
+                        <li>🎨 <strong>Giao diện hiện đại</strong> với glass morphism</li>
+                        <li>⚡ <strong>Tải nhanh</strong> và mượt mà</li>
+                    </ul>
+                    
+                    <h2>🚀 Cách sử dụng:</h2>
+                    <ol>
+                        <li>Sử dụng <strong>menu bên trái</strong> để điều hướng</li>
+                        <li>Dùng <strong>thanh tìm kiếm</strong> để tìm bài tập cụ thể</li>
+                        <li>Click vào bất kỳ bài tập nào để xem nội dung</li>
+                        <li>Trên mobile, dùng nút <strong>☰</strong> để mở/đóng menu</li>
+                    </ol>
+                    
+                    <h2>📊 Thống kê:</h2>
+                    <p>Hiện tại có <strong>77 bài tập</strong> được tổ chức trong <strong>10 chủ đề</strong> chính:</p>
+                    <ul>
+                        <li>🔢 Chuyển đổi hệ số đếm (14 bài)</li>
+                        <li>➕ Phép toán số học (15 bài)</li>
+                        <li>🔢 Số nguyên không dấu (9 bài)</li>
+                        <li>➖ Số nguyên có dấu (19 bài)</li>
+                        <li>🔧 Thao tác bit (6 bài)</li>
+                        <li>🔢 Số thực (4 bài)</li>
+                        <li>📝 Mã hóa ký tự (2 bài)</li>
+                        <li>🎵 Dữ liệu âm thanh (2 bài)</li>
+                        <li>🖼️ Dữ liệu hình ảnh (3 bài)</li>
+                        <li>🎯 Bài tập tổng hợp (1 bài)</li>
+                    </ul>
+                    
+                    <blockquote>
+                        <p><strong>💡 Mẹo:</strong> Bạn có thể bookmark trang này để truy cập nhanh các bài tập!</p>
+                    </blockquote>
+                </div>
+            `;
+        }
+        
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+        
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (window.innerWidth <= 768 && 
+                !sidebar.contains(e.target) && 
+                !menuToggle.contains(e.target) && 
+                sidebar.classList.contains('open')) {
+                sidebar.classList.remove('open');
+            }
+        });
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
