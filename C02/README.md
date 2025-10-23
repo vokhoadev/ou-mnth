@@ -10,6 +10,9 @@ Thư mục này chứa tất cả các dạng bài tập về biểu diễn dữ
 ### 0.1 Nén dữ liệu
 - **0.1.1** [Nén dữ liệu (Data Compression)](0.1.1_NenDuLieu_DataCompression.md)
 
+### 0.2 Tràn số (Overflow)
+- **0.2.1** [Tổng quan về tràn số (Overflow Overview)](0.2.1_TongQuan_TranSo_Overflow.md)
+
 ---
 
 ## 🔢 **1. CHUYỂN ĐỔI HỆ SỐ ĐẾM**
