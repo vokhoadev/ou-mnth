@@ -5,14 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting to Markdown Viewer...</title>
     <script>
-        // Redirect to Markdown Viewer
+        // Check if the 404 is for a .md file
         const currentPath = window.location.pathname;
-        const filePath = currentPath.substring(1); // Remove leading slash
         
-        const newUrl = new URL('/index.html', window.location.origin);
-        newUrl.searchParams.set('file', filePath);
-        
-        window.location.replace(newUrl.toString());
+        if (currentPath.endsWith('.md')) {
+            // Redirect to Markdown Viewer
+            const filePath = currentPath.substring(1); // Remove leading slash
+            const newUrl = new URL('/index.html', window.location.origin);
+            newUrl.searchParams.set('file', filePath);
+            window.location.replace(newUrl.toString());
+        } else {
+            // Redirect to home page
+            window.location.replace('/index.html');
+        }
     </script>
     <style>
         body {

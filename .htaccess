@@ -1,0 +1,7 @@
+RewriteEngine On
+
+# Redirect all .md files to Markdown Viewer
+RewriteRule ^(.*)\.md$ /index.html [R=301,L]
+
+# Redirect root to Markdown Viewer
+RewriteRule ^$ /index.html [R=301,L]

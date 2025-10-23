@@ -1,0 +1,2 @@
+# Redirect all .md files to Markdown Viewer
+/*.md /index.html

@@ -500,8 +500,44 @@
             setupSearch();
             setupMarked();
             
-            // Load default content
-            showWelcome();
+            // Check if there's a file parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const filePath = urlParams.get('file');
+            
+            if (filePath) {
+                // Find the file in our structure
+                const file = findFileByPath(filePath);
+                if (file) {
+                    loadMarkdownFile(file.path, file.title);
+                    // Set active state
+                    setTimeout(() => {
+                        const navItem = document.querySelector(`[data-path="${file.path}"]`);
+                        if (navItem) {
+                            document.querySelectorAll('.nav-item').forEach(item => {
+                                item.classList.remove('active');
+                            });
+                            navItem.classList.add('active');
+                        }
+                    }, 100);
+                } else {
+                    showWelcome();
+                }
+            } else {
+                // Load default content
+                showWelcome();
+            }
+        }
+        
+        // Find file by path in the structure
+        function findFileByPath(path) {
+            for (const [sectionTitle, files] of Object.entries(fileStructure)) {
+                for (const file of files) {
+                    if (file.path === path) {
+                        return file;
+                    }
+                }
+            }
+            return null;
         }
         
         // Build navigation menu
@@ -589,6 +625,11 @@
         // Load and display markdown file
         async function loadMarkdownFile(path, title) {
             currentFile = { path, title };
+            
+            // Update URL without page reload
+            const url = new URL(window.location);
+            url.searchParams.set('file', path);
+            window.history.pushState({}, '', url);
             
             // Update header
             document.getElementById('contentTitle').textContent = title;
