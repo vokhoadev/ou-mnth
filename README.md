@@ -116,7 +116,7 @@
 **🏫 Khoa:** Công nghệ Thông tin  
 **🏛️ Trường:** Đại Học Mở TP. Hồ Chí Minh  
 **📧 Email:** [Liên hệ qua hệ thống OU]  
-**🌐 Website:** [Trang web khoa CNTT OU]
+**🌐 Website:** [itverse.vn](https://itverse.vn) | [Trang web khoa CNTT OU]
 
 ---
 
