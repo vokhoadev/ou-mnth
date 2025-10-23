@@ -217,20 +217,68 @@
         }
         
         .markdown-content pre {
-            background: #dbeafe;
+            background: #f8fafc;
             color: #1e3a8a;
             padding: 20px;
             border-radius: 8px;
             overflow-x: auto;
             margin: 20px 0;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border: 1px solid #93c5fd;
+            border: 1px solid #e2e8f0;
         }
         
         .markdown-content pre code {
             background: none;
             padding: 0;
-            color: #1e3a8a;
+            color: inherit;
+        }
+        
+        /* Override highlight.js colors to match our navy theme */
+        .markdown-content pre .hljs {
+            background: #f8fafc !important;
+            color: #1e3a8a !important;
+        }
+        
+        .markdown-content pre .hljs-keyword,
+        .markdown-content pre .hljs-selector-tag,
+        .markdown-content pre .hljs-built_in,
+        .markdown-content pre .hljs-type {
+            color: #1e40af !important;
+            font-weight: 600;
+        }
+        
+        .markdown-content pre .hljs-string,
+        .markdown-content pre .hljs-title,
+        .markdown-content pre .hljs-attr {
+            color: #059669 !important;
+        }
+        
+        .markdown-content pre .hljs-number,
+        .markdown-content pre .hljs-literal,
+        .markdown-content pre .hljs-variable {
+            color: #dc2626 !important;
+        }
+        
+        .markdown-content pre .hljs-comment {
+            color: #6b7280 !important;
+            font-style: italic;
+        }
+        
+        .markdown-content pre .hljs-function,
+        .markdown-content pre .hljs-class {
+            color: #7c3aed !important;
+        }
+        
+        .markdown-content pre .hljs-tag {
+            color: #1e40af !important;
+        }
+        
+        .markdown-content pre .hljs-name {
+            color: #dc2626 !important;
+        }
+        
+        .markdown-content pre .hljs-attribute {
+            color: #059669 !important;
         }
         
         .markdown-content table {
