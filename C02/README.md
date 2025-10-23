@@ -5,14 +5,14 @@ Thư mục này chứa tất cả các dạng bài tập về biểu diễn dữ
 
 ---
 
-## <i class="fas fa-cube"></i> **0. TỔNG QUAN BIỂU DIỄN DỮ LIỆU**
+## 📦 **0. TỔNG QUAN BIỂU DIỄN DỮ LIỆU**
 
 ### 0.1 Nén dữ liệu
 - **0.1.1** [Nén dữ liệu (Data Compression)](0.1.1_NenDuLieu_DataCompression.md)
 
 ---
 
-## <i class="fas fa-exchange-alt"></i> **1. CHUYỂN ĐỔI HỆ SỐ ĐẾM**
+## 🔢 **1. CHUYỂN ĐỔI HỆ SỐ ĐẾM**
 
 ### 1.1 Chuyển từ thập phân sang các hệ khác
 - **1.1.1** [Thập phân → Nhị phân (chia 2)](1.1.1_ThapPhan_Sang_NhiPhan.md)
@@ -38,7 +38,7 @@ Thư mục này chứa tất cả các dạng bài tập về biểu diễn dữ
 
 ---
 
-## <i class="fas fa-plus"></i> **2. PHÉP TOÁN SỐ HỌC NHỊ PHÂN**
+## ➕ **2. PHÉP TOÁN SỐ HỌC NHỊ PHÂN**
 
 ### 2.1 Phép toán nhị phân
 - **2.1.1** [Phép cộng nhị phân cơ bản](2.1.1_PhepCong_NhiPhan.md)
@@ -65,7 +65,7 @@ Thư mục này chứa tất cả các dạng bài tập về biểu diễn dữ
 
 ---
 
-## <i class="fas fa-hashtag"></i> **3. BIỂU DIỄN SỐ NGUYÊN KHÔNG DẤU**
+## 🔢 **3. BIỂU DIỄN SỐ NGUYÊN KHÔNG DẤU**
 
 ### 3.1 Biểu diễn và thao tác số không dấu
 - **3.1.1** [Biểu diễn số nguyên không dấu](3.1.1_BieuDien_SoNguyen_KhongDau.md)
@@ -80,7 +80,7 @@ Thư mục này chứa tất cả các dạng bài tập về biểu diễn dữ
 
 ---
 
-## <i class="fas fa-minus"></i> **4. BIỂU DIỄN SỐ NGUYÊN CÓ DẤU**
+## ➖ **4. BIỂU DIỄN SỐ NGUYÊN CÓ DẤU**
 
 ### 4.1 Mã độ lớn có dấu (Signed Magnitude)
 - **4.1.1** [Biểu diễn số nguyên có dấu](4.1.1_BieuDien_SoNguyen_CoDau.md)
@@ -123,7 +123,7 @@ Thư mục này chứa tất cả các dạng bài tập về biểu diễn dữ
 
 ---
 
-## <i class="fas fa-calculator"></i> **6. BIỂU DIỄN SỐ THỰC**
+## 🔢 **6. BIỂU DIỄN SỐ THỰC**
 
 ### 6.1 Số dấu chấm tĩnh (Fixed Point)
 - **6.1.1** [Số dấu chấm tĩnh (Fixed Point)](6.1.1_SoDauChamTinh_FixedPoint.md)
@@ -147,7 +147,7 @@ Thư mục này chứa tất cả các dạng bài tập về biểu diễn dữ
 
 ---
 
-## <i class="fas fa-music"></i> **8. DỮ LIỆU ÂM THANH**
+## 🎵 **8. DỮ LIỆU ÂM THANH**
 
 ### 8.1 Nguyên lý số hóa âm thanh
 - **8.1.1** [Nguyên lý số hóa âm thanh](8.1.1_NguyenLySoHoaAmThanh.md)
@@ -157,7 +157,7 @@ Thư mục này chứa tất cả các dạng bài tập về biểu diễn dữ
 
 ---
 
-## <i class="fas fa-image"></i> **9. DỮ LIỆU HÌNH ẢNH**
+## 🖼️ **9. DỮ LIỆU HÌNH ẢNH**
 
 ### 9.1 Biểu diễn màu sắc
 - **9.1.1** [Biểu diễn màu sắc (RGB)](9.1.1_BieuDienMauSac_RGB.md)
@@ -206,7 +206,7 @@ Thư mục này chứa tất cả các dạng bài tập về biểu diễn dữ
 
 ## **HƯỚNG DẪN SỬ DỤNG**
 
-### <i class="fas fa-graduation-cap"></i> Cách học hiệu quả:
+### 📖 Cách học hiệu quả:
 1. **Bắt đầu từ cơ bản**: Chuyển đổi hệ số đếm
 2. **Thực hành đều đặn**: Mỗi ngày 1-2 dạng bài tập
 3. **Làm bài có lời giải trước**: Hiểu phương pháp
@@ -227,7 +227,7 @@ Thư mục này chứa tất cả các dạng bài tập về biểu diễn dữ
 
 ---
 
-**<i class="fas fa-sticky-note"></i> Ghi chú:**
+**📝 Ghi chú:**
 - = Đã hoàn thành
 - ⏳ = Chưa hoàn thành
 - = Đang cập nhật
