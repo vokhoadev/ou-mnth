@@ -320,6 +320,28 @@
             color: #1e3a8a;
         }
         
+        /* Font Awesome icons in markdown content */
+        .markdown-content i.fas,
+        .markdown-content i.far,
+        .markdown-content i.fab {
+            margin-right: 8px;
+            color: #1e40af;
+            font-size: 0.9em;
+        }
+        
+        .markdown-content h1 i.fas,
+        .markdown-content h2 i.fas,
+        .markdown-content h3 i.fas,
+        .markdown-content h4 i.fas {
+            margin-right: 10px;
+            color: #1e40af;
+        }
+        
+        .markdown-content li i.fas {
+            margin-right: 6px;
+            color: #1e40af;
+        }
+        
         /* Loading and Error States */
         .loading {
             text-align: center;
@@ -679,7 +701,10 @@
                     return hljs.highlightAuto(code).value;
                 },
                 breaks: true,
-                gfm: true
+                gfm: true,
+                sanitize: false,  // Allow HTML tags
+                smartLists: true,
+                smartypants: true
             });
         }
         
