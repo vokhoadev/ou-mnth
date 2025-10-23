@@ -228,11 +228,11 @@ Thư mục này chứa tất cả các dạng bài tập về biểu diễn dữ
 ---
 
 **📝 Ghi chú:**
-- = Đã hoàn thành
+- ✅ = Đã hoàn thành
 - ⏳ = Chưa hoàn thành
-- = Đang cập nhật
+- 🔄 = Đang cập nhật
 
-**📅 Cập nhật lần cuối:** $(date)
+**📅 Cập nhật lần cuối:** Tháng 1, 2025
 
 ---
 

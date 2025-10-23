@@ -126,7 +126,7 @@
 - ⏳ = Chưa hoàn thành  
 - 🔄 = Đang cập nhật
 
-**📅 Cập nhật lần cuối:** $(date)
+**📅 Cập nhật lần cuối:** Tháng 1, 2025
 
 ---
 
